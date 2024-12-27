@@ -1,0 +1,22 @@
+#include "pch.h"
+#include <iostream>
+#include <string>
+using namespace winrt;
+using namespace Windows::Foundation;
+
+int lengthOfLastWord(std::string s) {
+    int i = s.length() - 1;
+
+    while (i >= 0 && s[i] == ' ')
+        --i;
+    const int lastIndex = i;
+    while (i >= 0 && s[i] != ' ')
+        --i;
+
+    return lastIndex - i;
+}
+int main()
+{
+   int z = lengthOfLastWord("I love learning programming");
+   std::cout << z << std::endl;
+}
