@@ -1,0 +1,26 @@
+#include "pch.h"
+#include <iostream>
+#include <string>
+using namespace winrt;
+using namespace Windows::Foundation;
+
+static bool isPalindrome(std::string s) {
+    std::string s1 = "";
+    for (int i = 0; i < s.size(); i++) {
+        if (s[i] == ' ')
+            s.erase(i, 1);
+        s[i] = toupper(s[i]);
+    }
+    for (int i = s.size() - 1; i >= 0; i--)
+    {
+        s1 += s[i];
+    }
+    if (s == s1)
+        return 1;
+    else return 0;
+}
+int main()
+{
+   bool z = isPalindrome("dacad");
+   std::cout << z << std::endl;
+}
