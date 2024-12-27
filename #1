@@ -1,0 +1,19 @@
+#include "pch.h"
+#include <iostream>
+using namespace winrt;
+using namespace Windows::Foundation;
+
+int main()
+{
+    int z = sqrt(12);
+    std::cout << "Koren:" << z << std::endl;
+}
+int sqrt(int x) {
+    for (int y = 1; y < x; ++y)
+    {
+        int s = x;
+        if ((s /= y) == y)
+            return y;
+    }
+
+}
