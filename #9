@@ -1,0 +1,160 @@
+#include "pch.h"
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+class bigInteger {
+private:
+    bool sign; 
+    std::vector<int> digits; 
+
+public:
+    
+    bigInteger() : sign(true) {}
+
+    
+    bigInteger(int num) {
+        if (num < 0) {
+            sign = false;
+            num = -num;
+        }
+        else {
+            sign = true;
+        }
+
+        std::string numStr = std::to_string(num);
+        int length = numStr.length();
+
+        
+        if (length % 2 != 0) {
+            digits.push_back(numStr[0] - '0');
+            for (int i = 1; i < length; i += 2) {
+                int twoDigit = (numStr[i] - '0') * 10 + (numStr[i + 1] - '0');
+                digits.push_back(twoDigit);
+            }
+        }
+        else {
+            for (int i = 0; i < length; i += 2) {
+                int twoDigit = (numStr[i] - '0') * 10 + (numStr[i + 1] - '0');
+                digits.push_back(twoDigit);
+            }
+        }
+    }
+
+   
+    ~bigInteger() {
+        digits.clear();
+    }
+
+    
+    void change_sign() {
+        sign = !sign;
+    }
+
+    
+    static bigInteger plus(const bigInteger& a, const bigInteger& b) {
+        if (a.sign == b.sign) {
+            
+            bigInteger result;
+            result.sign = a.sign;
+            int carry = 0;
+            int maxSize = std::max(a.digits.size(), b.digits.size());
+
+            for (int i = 0; i < maxSize || carry; ++i) {
+                int sum = carry;
+                if (i < a.digits.size()) sum += a.digits[a.digits.size() - 1 - i];
+                if (i < b.digits.size()) sum += b.digits[b.digits.size() - 1 - i];
+                carry = sum / 100;
+                result.digits.push_back(sum % 100);
+            }
+
+            std::reverse(result.digits.begin(), result.digits.end());
+            return result;
+        }
+        else {
+            
+            if (a.sign) {
+                return minus(a, b);
+            }
+            else {
+                return minus(b, a);
+            }
+        }
+    }
+
+    
+    static bigInteger minus(const bigInteger& a, const bigInteger& b) {
+        if (a.sign == b.sign) {
+            
+            bigInteger result;
+            result.sign = a.sign;
+            int borrow = 0;
+            int maxSize = std::max(a.digits.size(), b.digits.size());
+
+            for (int i = 0; i < maxSize; ++i) {
+                int diff = borrow;
+                if (i < a.digits.size()) diff += a.digits[a.digits.size() - 1 - i];
+                if (i < b.digits.size()) diff -= b.digits[b.digits.size() - 1 - i];
+                if (diff < 0) {
+                    diff += 100;
+                    borrow = -1;
+                }
+                else {
+                    borrow = 0;
+                }
+                result.digits.push_back(diff);
+            }
+
+           
+            while (result.digits.size() > 1 && result.digits.back() == 0) {
+                result.digits.pop_back();
+            }
+
+            std::reverse(result.digits.begin(), result.digits.end());
+            return result;
+        }
+        else {
+          
+            if (a.sign) {
+                return plus(a, b);
+            }
+            else {
+                bigInteger temp = b;
+                temp.change_sign();
+                return plus(a, temp);
+            }
+        }
+    }
+
+   
+    void print() const {
+        if (!sign) {
+            std::cout << "-";
+        }
+        for (int digit : digits) {
+            std::cout << digit << " ";
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main() {
+    bigInteger a(1234567);
+    bigInteger b(-9876543);
+
+    std::cout << "a: ";
+    a.print(); 
+    std::cout << "b: ";
+    b.print(); 
+
+    bigInteger c = bigInteger::plus(a, b);
+    std::cout << "a + b: ";
+    c.print(); 
+
+    bigInteger d = bigInteger::minus(a, b);
+    std::cout << "a - b: ";
+    d.print(); 
+    return 0;
+}
+
