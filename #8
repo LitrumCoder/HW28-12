@@ -1,0 +1,62 @@
+#include "pch.h"
+#include <iostream>
+#include <vector>
+#include <string>
+
+class bigInteger {
+private:
+    bool sign; 
+    std::vector<int> digits; 
+
+public:
+    bigInteger() : sign(true) {}
+
+    bigInteger(int num) {
+        if (num < 0) {
+            sign = false;
+            num = -num;
+        }
+        else {
+            sign = true;
+        }
+
+        std::string numStr = std::to_string(num);
+        int length = numStr.length();
+
+        if (length % 2 != 0) {
+            digits.push_back(numStr[0] - '0');
+            for (int i = 1; i < length; i += 2) {
+                int twoDigit = (numStr[i] - '0') * 10 + (numStr[i + 1] - '0');
+                digits.push_back(twoDigit);
+            }
+        }
+        else {
+            for (int i = 0; i < length; i += 2) {
+                int twoDigit = (numStr[i] - '0') * 10 + (numStr[i + 1] - '0');
+                digits.push_back(twoDigit);
+            }
+        }
+    }
+
+    ~bigInteger() {
+        digits.clear();
+    }
+
+
+    void print() const {
+        if (!sign) {
+            std::cout << "-";
+        }
+        for (int digit : digits) {
+            std::cout << digit << " ";
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main() {
+    bigInteger a(1234567);
+    a.print(); 
+
+    return 0;
+}
