@@ -1,0 +1,79 @@
+#include "pch.h"
+#include <string>
+#include <vector>
+
+// Базовый класс для всех персонажей и врагов
+class Character {
+protected:
+    std::string name;
+    int health;
+    int attack_power;
+
+public:
+    Character(std::string name, int health, int attack_power);
+    void attack(Character& target);
+    void take_damage(int damage);
+    bool is_alive() const;
+};
+
+// Класс для главного героя
+class Hero : public Character {
+private:
+    Weapon weapon;
+    Shield shield;
+
+public:
+    Hero(std::string name, int health, int attack_power, Weapon weapon, Shield shield);
+    void use_ability();
+    void heal(int amount);
+};
+
+// Класс для врагов
+class Enemy : public Character {
+private:
+    std::string type;
+    bool is_boss;
+
+public:
+    Enemy(std::string name, int health, int attack_power, std::string type, bool is_boss);
+    void special_attack(Character& target);
+    std::string drop_loot();
+};
+
+// Класс для боссов
+class Boss : public Enemy {
+private:
+    int phase;
+    std::string weakness;
+
+public:
+    Boss(std::string name, int health, int attack_power, std::string type, std::string weakness);
+    void change_phase();
+    void use_ultimate();
+};
+
+// Класс для оружия
+class Weapon {
+private:
+    std::string name;
+    int damage;
+    int durability;
+
+public:
+    Weapon(std::string name, int damage, int durability);
+    void attack(Character& target);
+    void break_Weapon();
+};
+
+// Класс для щитов
+class Shield {
+private:
+    std::string name;
+    int defense;
+    int durability;
+
+public:
+    Shield(std::string name, int defense, int durability);
+    void block(int damage);
+    void break_Sheald();
+};
